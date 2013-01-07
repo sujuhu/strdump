@@ -168,7 +168,7 @@ bool dump_unis(uint8_t* rbof, uint8_t* reof, slist_t* list)
 {
     wchar_t* fp = (wchar_t*)rbof;
     wchar_t* ep = NULL;
-    for (; (uint8_t*)fp < reof; fp = ep + 1) {
+    while((uint8_t*)fp < reof) {
         //先找到宽字符字符串的末尾
         wchar_t* ep = find_unis_range_end(fp, reof);
         if (!ep) 
@@ -178,12 +178,14 @@ bool dump_unis(uint8_t* rbof, uint8_t* reof, slist_t* list)
         //删除字符串末尾的空格
         wchar_t* tep = trim_unis_end(ep, fp);
         if( NULL == tep ) {
+            fp = ep + 1;
             continue;
         }
 
         //找到宽字符串的首部
         wchar_t* sp = find_unis( tep, fp );
         if( NULL == sp ) {
+            fp = ep + 1;
             continue;
         }
         int cc = tep - sp; 
@@ -191,6 +193,7 @@ bool dump_unis(uint8_t* rbof, uint8_t* reof, slist_t* list)
         //删除宽字符串开头的空格
         wchar_t* tsp = trim_unis_start(sp, cc);
         if (tsp == NULL) {
+            fp = ep + 1;
             continue;
         }
 
@@ -199,9 +202,12 @@ bool dump_unis(uint8_t* rbof, uint8_t* reof, slist_t* list)
         if (wcs == NULL) 
             return false;
         memset(wcs, 0, sizeof(item_t));
+        wcs->data.codeset = CODESET_UTF8;
         wcs->data.start = (unsigned char*)tsp;
         wcs->data.len = cc;
         slist_add(list, &wcs->node);
+        // printf("add string\n");
+        fp = ep + 1;
         /*
         bool tst_unis = true;
         ulong_t wp = 0, tmp_mb_cc = 0;
@@ -275,7 +281,7 @@ bool dump_mbs(uint8_t* rbof, uint8_t* reof, slist_t* list)
     uint8_t* fp = rbof;
     while( fp < reof ) {
         //查找字符串结束字符
-        uint8_t* ep = find_mbs_range_end( fp, reof ); 
+        uint8_t* ep = find_mbs_range_end(fp, reof); 
         if( !ep ) 
             //找不到结束字符了， 就直接退出
             return true;
@@ -292,14 +298,19 @@ bool dump_mbs(uint8_t* rbof, uint8_t* reof, slist_t* list)
                 //找到字符串开始位置， 还需要删除空格字符
                 uint8_t* tsp = trim_mbs_start(sp, len);
                 len = tep - tsp;
-                item_t* mbs = (item_t*)malloc(sizeof(item_t));
-                if (mbs == NULL) {
-                    return false;
+                if (len >= MIN_STR_LEN && len <= MAX_STR_LEN) {
+                    item_t* mbs = (item_t*)malloc(sizeof(item_t));
+                    if (mbs == NULL) {
+                        return false;
+                    }
+                    memset(mbs, 0, sizeof(item_t));
+                    mbs->data.codeset = CODESET_ASCII;
+                    mbs->data.start = tsp;
+                    mbs->data.len = len;
+                    slist_add(list, &mbs->node);
                 }
-                memset(mbs, 0, sizeof(item_t));
-                mbs->data.start = tsp;
-                mbs->data.len = len;
-                slist_add(list, &mbs->node);
+
+                // printf("add string\n");
                 /*
                 if( sp ) {
                     ulong_t raw_ofs = ofsbase + (sp - rbof);

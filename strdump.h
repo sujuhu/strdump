@@ -3,8 +3,11 @@
 
 #define INVALID_DUMP_BUFFER  (int)0
 
+#define CODESET_UTF8        2
+#define CODESET_ASCII       1
 typedef struct _string_t
 {
+    int codeset;
     unsigned char* start;
     int  len;
 }string_t;
