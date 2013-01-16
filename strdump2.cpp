@@ -408,9 +408,9 @@ bool dump_string2(char* buffer, int size, queue_t* strlist)
     while (content < (buffer + size - 128)) {
         int current_charset = 0;
         int str_len = 0;
-        if ((content - buffer) == 0x5D0) {
-            printf("debug mode\n");
-        }
+        // if ((content - buffer) == 0x5D0) {
+        //     printf("debug mode\n");
+        // }
 
         uint32_t offset = content - buffer;
         if (is_ascii_string(content, &str_len)) {
@@ -475,10 +475,10 @@ bool dump_string2(char* buffer, int size, queue_t* strlist)
 
         // content += char_len;
     }
-    printf("ASCII :%d\n", cnt_ascii);
-    printf("UNICODE :%d\n", cnt_unicode);
-    printf("GB2312 :%d\n", cnt_gb2312);
-    printf("UTF8 :%d\n", cnt_utf8);
-    printf("Count:%d\n", cnt_ascii + cnt_unicode + cnt_gb2312 + cnt_utf8);
+    // printf("ASCII :%d\n", cnt_ascii);
+    // printf("UNICODE :%d\n", cnt_unicode);
+    // printf("GB2312 :%d\n", cnt_gb2312);
+    // printf("UTF8 :%d\n", cnt_utf8);
+    // printf("Count:%d\n", cnt_ascii + cnt_unicode + cnt_gb2312 + cnt_utf8);
     return true;
 }
