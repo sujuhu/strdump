@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <memory.h>
 #include <iconv.h>
+#include "typedef.h"
 #include "strdump.h"
 
 void usage()

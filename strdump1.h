@@ -12,7 +12,7 @@ extern "C" {
 #ifndef OUT
 #define OUT
 #endif
-
+#include <slist.h>
 
 
 bool dump_string1(unsigned char* buffer, int size, slist_t* strlist);

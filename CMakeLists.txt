@@ -4,8 +4,6 @@ if(COMMAND cmake_policy)
 endif(COMMAND cmake_policy)
 PROJECT(strdump)
 
-
-
 SET(BUILD_WITH_STATIC_CRT 1)
 SET(BUILD_WITH_DEBUG_INFO 1)
 if(MSVC)
@@ -76,7 +74,6 @@ FIND_PACKAGE(ICONV)
 INCLUDE_DIRECTORIES(${ICONV_INCLUDE_DIRS})
 
 SET(SRC_LIST strdump.cpp
-strdump1.cpp
 strdump2.cpp
 rarechar.cpp)
 #static library
@@ -91,6 +88,8 @@ ADD_EXECUTABLE(strtool ${TOOL_SRC_LIST})
 TARGET_LINK_LIBRARIES(strtool strdump iconv)
 ADD_DEPENDENCIES(strtool strdump)
 INSTALL(TARGETS strtool RUNTIME DESTINATION bin)
+INSTALL(FILES strdump.h DESTINATION include)
+INSTALL(FILES strtool.cpp DESTINATION example)
 
 
 

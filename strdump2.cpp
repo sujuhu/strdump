@@ -2,11 +2,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iconv.h>
+#include <memory.h>
 #include "typedef.h"
 #include <queue.h>
 #include "rarechar.h"
 #include "strdump2.h"
 #include "strdump.h"
+#include "item.h"
 
 bool is_ascii(char ch)
 {

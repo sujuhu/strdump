@@ -4,6 +4,7 @@
 #include "typedef.h"
 #include <slist.h>
 #include "strdump.h"
+#include "item.h"
 #include "strdump1.h"
 #define MAX_STR_LEN         512
 #define MIN_STR_LEN         4
