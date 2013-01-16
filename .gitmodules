@@ -1,3 +1,6 @@
 [submodule "struct"]
 	path = struct
 	url = ssh://kimzhang@analyst003/git/struct.git
+[submodule "iconv"]
+	path = iconv
+	url = ssh://kimzhang@analyst003/git/libiconv.git
