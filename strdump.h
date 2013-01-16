@@ -12,7 +12,7 @@
 typedef struct _string_t
 {
     int codeset;			/*字符串编码*/
-    unsigned char* start;	/*字符串在文件中的偏移*/
+    unsigned int offset;	/*字符串在文件中的偏移*/
     int  len;				/*字符串长度*/
 }string_t;
 

@@ -40,7 +40,7 @@ hash_map_t rare_utf8;
 #define UTF8_CHS_WIDTH 	3
 
 
-int unicode_to_gb2312(
+int rare_unicode_to_gb2312(
 	uint8_t* in_buf, size_t in_len, 
 	uint8_t* out_buf, size_t out_len)
 {
@@ -63,7 +63,7 @@ int unicode_to_gb2312(
 }
 
 
-int unicode_to_utf8(
+int rare_unicode_to_utf8(
 	uint8_t* in_buf, size_t in_len, 
 	uint8_t* out_buf, size_t out_len)
 {
@@ -122,7 +122,7 @@ bool init_rare_gb2312()
 		for(int j =0; table[j] !=0; j++) {
 			count ++;
 			uint8_t buffer[8] = {0};
-	    	int len = unicode_to_gb2312((uint8_t*)&table[j], 2, buffer, 8);
+	    	int len = rare_unicode_to_gb2312((uint8_t*)&table[j], 2, buffer, 8);
 	    	if (len != 2) {
 	    		fail ++;
 	    		continue;
@@ -166,7 +166,7 @@ bool init_rare_utf8()
 
 		for(int j =0; table[j] !=0; j++) {
 			uint8_t buffer[UTF8_MAX_WIDTH] = {0};
-	    	int len = unicode_to_utf8((uint8_t*)&table[j], 2, 
+	    	int len = rare_unicode_to_utf8((uint8_t*)&table[j], 2, 
 	    		buffer, UTF8_MAX_WIDTH);
 	    	if (len != UTF8_CHS_WIDTH) {
 	    		continue;

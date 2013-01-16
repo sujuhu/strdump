@@ -381,7 +381,7 @@ bool is_utf8_string(char* str, int* len)
     return true;
 }
 
-void add_string_list(int charset, char* content, int len, queue_t* strlist)
+void add_string_list(int charset, uint32_t offset, int len, queue_t* strlist)
 {
     item_t* mbs = (item_t*)malloc(sizeof(item_t));
     if (mbs == NULL) {
@@ -390,7 +390,7 @@ void add_string_list(int charset, char* content, int len, queue_t* strlist)
     memset(mbs, 0, sizeof(item_t));
 
     mbs->data.codeset = charset;
-    mbs->data.start = (uint8_t*)content;
+    mbs->data.offset = (unsigned int)offset ;
     mbs->data.len = len;
     queue_put(strlist, mbs);   
 }
@@ -411,20 +411,22 @@ bool dump_string2(char* buffer, int size, queue_t* strlist)
         if ((content - buffer) == 0x5D0) {
             printf("debug mode\n");
         }
+
+        uint32_t offset = content - buffer;
         if (is_ascii_string(content, &str_len)) {
-            add_string_list(CHARSET_ASCII, content, str_len, strlist);
+            add_string_list(CHARSET_ASCII, offset, str_len, strlist);
             cnt_ascii ++;
             content += str_len;
         } else if (is_unicode_string((unsigned short*)content, &str_len)) {
-            add_string_list(CHARSET_UNICODE, content, str_len, strlist);
+            add_string_list(CHARSET_UNICODE, offset, str_len, strlist);
             cnt_unicode ++;
             content += str_len;
         } else if (is_gb2312_string((unsigned short*)content, &str_len)) {
-            add_string_list(CHARSET_GB2312, content, str_len, strlist);
+            add_string_list(CHARSET_GB2312, offset, str_len, strlist);
             cnt_gb2312 ++;
             content += str_len;
         } else if (is_utf8_string(content, &str_len)) {
-            add_string_list(CHARSET_UTF8, content, str_len, strlist);
+            add_string_list(CHARSET_UTF8, offset, str_len, strlist);
             cnt_utf8 ++;
             content += str_len;
         } else {

@@ -97,27 +97,28 @@ int main(int argc, char* argv[])
 
 	string_t* str = dump_string_first(fd);
 	for(; str != NULL; str = dump_string_next(fd)) {
-		int offset = int(str->start - (unsigned char*)buffer);
+		unsigned int offset = str->offset;
+		unsigned char* start = str->offset + (unsigned char*)buffer;
 		int len = str->len;
 		if (str->codeset == CHARSET_UTF8) {
 			//UTF转GB2312
-			char* gbk = utf8_to_gbk(str->start, str->len);
+			char* gbk = utf8_to_gbk(start, str->len);
 			if (gbk == NULL) {
 				printf("UTF8: 0x%08X %d ########\n", offset, len);
 			} else {
 				printf("UTF8: 0x%08X %d %s\n", offset, len, gbk);	
 			}
 		} else if(str->codeset == CHARSET_ASCII) {
-			printf("ASCII: 0x%08X %d %.*s\n", offset, len,  str->len, str->start );
+			printf("ASCII: 0x%08X %d %.*s\n", offset, len,  str->len, start );
 		} else if(str->codeset == CHARSET_UNICODE) {
-			char* gbk = unicode_to_gbk(str->start, str->len);
+			char* gbk = unicode_to_gbk(start, str->len);
 			if (gbk == NULL) {
 				printf("UNICODE: 0x%08X %d ########\n", offset, len);
 			} else {
 				printf("UNICODE: 0x%08X %d %s\n", offset, len, gbk);
 			}
 		} else if(str->codeset == CHARSET_GB2312) {
-			char* gbk = gb2312_to_gbk(str->start, str->len);
+			char* gbk = gb2312_to_gbk(start, str->len);
 			if (gbk == NULL) {
 				printf("GB2312: 0x%08X %d ########\n", offset, len);
 			} else {
