@@ -79,6 +79,7 @@ bool is_valid_ascii_string(char* str, int len)
 #define MAX_ASCII_SIZE   128
 bool is_ascii_string(char* str, int* len)
 {
+    *len = 0;
     for(int i= 0; i < MAX_ASCII_SIZE; i++) {
         if (!is_ascii(str[i])) {
             if (i <= MIN_ASCII_SIZE) {
@@ -214,6 +215,7 @@ bool is_valid_gb2312(unsigned short ch)
 #define MIN_GB2312_SIZE   4
 int is_gb2312_string(unsigned short* str, int* len)
 {
+    *len = 0;
     for(int i= 0; i < MAX_GB2312_SIZE; i++) {
         if (!is_gb2312((unsigned char*)&str[i]) 
             || !is_valid_gb2312(str[i])) {
@@ -242,6 +244,7 @@ bool is_unicode_chinese(unsigned short utf)
 #define MIN_UNICODE_SIZE   4
 bool is_unicode_string(unsigned short* str, int* len)
 {
+    *len = 0;
     for(int i= 0; i < MAX_UNICODE_SIZE; i++) {
         if (is_unicode_chinese(str[i]) && !is_rare_unicode((uint8_t*)&str[i])) {
             continue;
@@ -356,15 +359,15 @@ bool is_valid_utf8(char* ch, int char_len)
 #define MIN_UTF8_SIZE   4
 
 bool is_utf8_string(char* str, int* len)
-{
+{   
+    *len = 0;
     for(int i= 0; i < MAX_UTF8_SIZE; i++) {
         int char_len = 0;
         if (!is_utf8(str, &char_len) 
             || !is_valid_utf8(str, char_len)) {
-            if (i <= MIN_UTF8_SIZE) {
+            if (i <= MIN_UTF8_SIZE || i == *len) {
                 //字符数量过少
-                return false;
-            } else if (*len == i ) {
+                //字符数量和字节数量一样， 说明是ASCII编码
                 return false;
             } else {
                 return true;
@@ -405,6 +408,9 @@ bool dump_string2(char* buffer, int size, queue_t* strlist)
     while (content < (buffer + size - 128)) {
         int current_charset = 0;
         int str_len = 0;
+        if ((content - buffer) == 0x5D0) {
+            printf("debug mode\n");
+        }
         if (is_ascii_string(content, &str_len)) {
             add_string_list(CHARSET_ASCII, content, str_len, strlist);
             cnt_ascii ++;
